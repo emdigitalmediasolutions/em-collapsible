@@ -12,7 +12,9 @@ import {
 	PanelRow,
 	SelectControl,
 	TextControl,
+	TextareaControl,
 } from '@wordpress/components';
+import { RichText } from '@wordpress/block-editor';
 import { more } from '@wordpress/icons';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -36,46 +38,24 @@ import './editor.scss';
 export default function Edit( props ) {
 	const {
 		attributes: {
-			height,
-			columns,
-			gutter,
-			buttonLabel,
+			dropDownType,
+			title,
+			description,
 		},
 		className,
 	} = props;
 
-	const onHeightChange = ( newHeight ) => {
-		props.setAttributes( { height: newHeight === undefined ? '300' : newHeight } );
+	const onDropDownTypeChange = (newDropDownType) => {
+		props.setAttributes({dropDownType: newDropDownType === undefined ? '1' : newDropDownType});
 	};
 
-	const onColumnChange = (newColumns) => {
-		props.setAttributes({columns: newColumns === undefined ? '3' : newColumns});
+	const onTitleChange = (newTitle) => {
+		props.setAttributes({title: newTitle === undefined ? '' : newTitle});
 	};
 
-	const onGutterChange = (newGutter) => {
-		props.setAttributes({gutter: newGutter === undefined ? '0' : newGutter});
+	const onDescriptionChange = (newDescription) => {
+		props.setAttributes({description: newDescription === undefined ? '' : newDescription});
 	};
-
-	const onButtonLabelChange = (newButtonLabel) => {
-		props.setAttributes({buttonLabel: newButtonLabel === undefined ? 'Open' : newButtonLabel});
-	}
-
-	const exampleColumns = [];
-	for (let i = 0; i < columns * 2; i++) {
-		exampleColumns.push(<div className={"service-container columns-" + columns} style={{padding: gutter + 'rem'}}>
-			<div className="service">
-				<div class="service-overlay" style={{height: height + 'px'}}>
-					<div style={{width: '100%;'}}>
-						<p className="service-title">Service</p>
-						<p className="service-description">Description of this service</p>
-						<button className="service-link">
-							{buttonLabel}
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>);
-	}
 	
 	return (
 		<div>
@@ -84,8 +64,8 @@ export default function Edit( props ) {
 					<PanelBody title="Display Settings" initialOpen={ true }>
 						<PanelRow>
 							<SelectControl
-								label={ __('Maximum number of columns to display?') }
-								value={columns}
+								label={ __('Drop Down Type') }
+								value={dropDownType}
 								options={[
 									{label: '1', value: '1'},
 									{label: '2', value: '2'},
@@ -94,35 +74,34 @@ export default function Edit( props ) {
 									{label: '5', value: '5'},
 									{label: '6', value: '6'},
 								]}
-								onChange={onColumnChange}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label={ __('The space between each service block') }
-								value={gutter}
-								onChange={onGutterChange}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label={ __('The height of each service block in pixels') }
-								value={height}
-								onChange={onHeightChange}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label={ __('Button label') }
-								value={buttonLabel}
-								onChange={onButtonLabelChange}
+								onChange={onDropDownTypeChange}
 							/>
 						</PanelRow>
 					</PanelBody>
 				</InspectorControls>
             }
-			<p className={ className } style={{lineHeight: 0}}>
-				{exampleColumns}
+			<p className={ className }>
+				<div style={{border: '1px solid #ddd', marginTop: '1rem', marginBottom: '1rem', fontWeight: 'bold', padding: '.5rem'}}>
+					<RichText
+						onChange={ onTitleChange }
+						value={ title }
+						placeholder={ __( 'Enter title...' ) }
+						className=""
+					/>
+				</div>
+				<div style={{display: 'block', marginLeft: 'auto', marginRight: 'auto', width: '20', textAlign: 'center'}}>
+					<svg className="dashicons dashicons-arrow-down-alt-2" width="20" height="20" viewBox="0 0 20 20">
+						<path d="M5 6l5 5 5-5 2 1-7 7-7-7z"></path>
+					</svg>
+				</div>
+				<div style={{border: '1px solid #ddd', marginTop: '1rem', marginBottom: '1rem', padding: '.5rem'}}>
+					<RichText
+						onChange={ onDescriptionChange }
+						value={ description }
+						placeholder={ __( 'Enter description...' ) }
+						className=""
+					/>
+				</div>
 			</p>
 		</div>
 	);

@@ -58,7 +58,7 @@ registerBlockType( 'create-block/em-collapsible', {
 	 * An icon property should be specified to make it easier to identify a block.
 	 * These can be any of WordPress’ Dashicons, or a custom svg element.
 	 */
-	icon: 'schedule',
+	icon: 'arrow-down-alt2',
 
 	/**
 	 * Optional block extended support features.
@@ -69,21 +69,19 @@ registerBlockType( 'create-block/em-collapsible', {
 	},
 
 	attributes: {
-		height: {
+		dropDownType: {
 			type: 'string',
-			default: '300',
+			default: '1',
 		},
-		columns: {
-			type: 'string',
-			default: '6',
+		title: {
+			type: 'html',
+			source: 'html',
+			selector: 'p.title',
 		},
-		gutter: {
-			type: 'string',
-			default: '0',
-		},
-		buttonLabel: {
-			type: 'string',
-			default: 'Open',
+		description: {
+			type: 'html',
+			source: 'html',
+			selector: 'p.description',
 		},
 	},
 
@@ -92,67 +90,6 @@ registerBlockType( 'create-block/em-collapsible', {
 	 */
 	edit: Edit,
 
+	save: save,
+
 } );
-
-import { registerPlugin } from "@wordpress/plugins";
-import { PluginSidebar, PluginSidebarMoreMenuItem } from "@wordpress/edit-post";
-import { PanelBody, TextControl, ColorPicker } from "@wordpress/components";
-import { withSelect, withDispatch } from "@wordpress/data";
-
-let PluginMetaFields = (props) => {
-    return (
-        <>
-            <PanelBody
-                title={__("Meta Fields Panel", "textdomain")}
-                icon="admin-post"
-                intialOpen={ true }
-            >
-				<TextControl
-					value={props.number_metafield}
-					type="number"
-					label={__("Display Priority", "textdomain")}
-					onChange={(value) => props.onMetaFieldChange(value)}
-				/>
-            </PanelBody>
-        </>
-    )
-}
-
-PluginMetaFields = withSelect(
-    (select) => {
-        return {
-            number_metafield: select('core/editor').getEditedPostAttribute('meta')['_service_display_priority']
-        }
-    }
-)(PluginMetaFields);
-
-PluginMetaFields = withDispatch(
-    (dispatch) => {
-        return {
-            onMetaFieldChange: (value) => {
-                dispatch('core/editor').editPost({meta: {_service_display_priority: value}})
-            }
-        }
-    }
-)(PluginMetaFields);
-
-registerPlugin( 'myprefix-sidebar', {
-    icon: 'schedule',
-    render: () => {
-        return (
-            <>
-                <PluginSidebarMoreMenuItem
-                    target="myprefix-sidebar"
-                >
-                    {__('Meta Options', 'textdomain')}
-                </PluginSidebarMoreMenuItem>
-                <PluginSidebar
-                    name="myprefix-sidebar"
-                    title={__('Meta Options', 'textdomain')}
-                >
-                    <PluginMetaFields />
-                </PluginSidebar>
-            </>
-        )
-    }
-})

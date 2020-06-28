@@ -52,10 +52,19 @@ function create_block_em_collapsible_block_init() {
 		filemtime( "$dir/$style_css" )
 	);
 
+	$script = 'collapsible.js';
+	wp_register_script(
+		'create-block-em-collapsible-block',
+		plugins_url($script, __FILE__),
+		array(),
+		filemtime("$dir/$script")
+	);
+
 	register_block_type( 'create-block/em-collapsible', array(
 		'editor_script' => 'create-block-em-collapsible-block-editor',
 		'editor_style'  => 'create-block-em-collapsible-block-editor',
 		'style'         => 'create-block-em-collapsible-block',
+		'script'		=> 'create-block-em-collapsible-block'
 	) );
 
 }
